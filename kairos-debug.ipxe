@@ -61,7 +61,7 @@ set rootfs kairos-${dist}-${version}-k3s${k3s_version}+k3s1.squashfs
 
 :kairos_install
 set url https://github.com/kairos-io/kairos/releases/download/${version}
-#set url http://192.168.40.211/kairos-assets
+#set url http://192.168.1.106/kairos-assets
 set kernel kairos-${dist}-${version}-kernel
 set initrd kairos-${dist}-${version}-initrd
 set rootfs kairos-${dist}-${version}.squashfs
