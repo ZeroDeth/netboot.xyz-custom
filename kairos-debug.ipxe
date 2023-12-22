@@ -8,7 +8,7 @@ set os kairos
 set os_arch ${arch}
 
 # cloudinit is in assets folder of my netboot installation
-set config http://192.168.1.106/cloudinit/kairos/config.yaml
+set config http://192.168.1.106:8081/cloudinit/kairos/config.yaml
 
 menu kairos version
   item v2.4.3 ${space} 2.4.3
@@ -61,7 +61,7 @@ set rootfs kairos-${dist}-${version}-k3s${k3s_version}+k3s1.squashfs
 
 :kairos_install
 set url https://github.com/kairos-io/kairos/releases/download/${version}
-#set url http://192.168.1.106/kairos-assets
+#set url http://192.168.1.106:8081/kairos-assets
 set kernel kairos-${dist}-${version}-kernel
 set initrd kairos-${dist}-${version}-initrd
 set rootfs kairos-${dist}-${version}.squashfs
