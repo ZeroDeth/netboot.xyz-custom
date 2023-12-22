@@ -38,7 +38,7 @@ set config ${agent_config}
 goto kairos_boot
 
 :kairos_install
-set url https://kairos-io/kairos/releases/download/${kairos_version}
+set url https://github.com/kairos-io/kairos/releases/download/${kairos_version}
 set kernel kairos-${kairos_dist}-${kairos_version}-kernel
 set initrd kairos-${kairos_dist}-${kairos_version}-initrd
 set rootfs kairos-${kairos_dist}-${kairos_version}.squashfs
