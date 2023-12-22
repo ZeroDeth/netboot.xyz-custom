@@ -1,0 +1,61 @@
+#!ipxe
+
+goto ${menu} ||
+clear version
+
+:kairos
+set os kairos
+set os_arch ${arch}
+
+# cloudinit is in assets folder of my netboot installation
+set server_config https://raw.githubusercontent.com/ZeroDeth/kairos-enigma/blob/main/deploy/config/server.yaml
+set agent_config https://raw.githubusercontent.com/ZeroDeth/kairos-enigma/blob/main/deploy/config/agent.yaml
+
+set kairos_version v1.3.0
+set k3s_version v1.25.3
+set kairos_dist ubuntu-22-lts
+
+menu kairos install
+  item kairos_k3s_server ${space} kairos ${kairos_version} ${kairos_dist} Install k3s server ${k3s_version}
+  item kairos_k3s_agent ${space} kairos ${kairos_version} ${kairos_dist} Install k3s agent ${k3s_version}
+  item kairos ${space} kairos-${kairos_dist}-${kairos_version}
+  choose --default kairos_k3s kairos_install && goto ${kairos_install}_install
+
+:kairos_k3s_server_install
+set url https://github.com/kairos-io/provider-kairos/releases/download/${kairos_version}
+set kernel kairos-${kairos_dist}-${kairos_version}-k3s${k3s_version}+k3s1-kernel
+set initrd kairos-${kairos_dist}-${kairos_version}-k3s${k3s_version}+k3s1-initrd
+set rootfs kairos-${kairos_dist}-${kairos_version}-k3s${k3s_version}+k3s1.squashfs
+set config ${server_config}
+goto kairos_boot
+
+:kairos_k3s_agent_install
+set url https://github.com/kairos-io/provider-kairos/releases/download/${kairos_version}
+set kernel kairos-${kairos_dist}-${kairos_version}-k3s${k3s_version}+k3s1-kernel
+set initrd kairos-${kairos_dist}-${kairos_version}-k3s${k3s_version}+k3s1-initrd
+set rootfs kairos-${kairos_dist}-${kairos_version}-k3s${k3s_version}+k3s1.squashfs
+set config ${agent_config}
+goto kairos_boot
+
+:kairos_install
+set url https://github.com/kairos-io/kairos/releases/download/${kairos_version}
+set kernel kairos-${kairos_dist}-${kairos_version}-kernel
+set initrd kairos-${kairos_dist}-${kairos_version}-initrd
+set rootfs kairos-${kairos_dist}-${kairos_version}.squashfs
+
+:kairos_boot
+set boot_params ip=dhcp netboot rd.cos.disable nodepair.enable console=tty1 console=ttyS0 root=live:${url}/${rootfs}
+set config_params config_url=${config}
+set debug_params #rd.break=pre-mount rd.shell #rd.debug #rd.live.debug=1 rd.net.dhcp.retry=5 rd.net.timeout.dhcp=300 rd.live.debug=1 loglevel=7
+
+# without imgfree netboot.xyz linux tries to boot with truncated rootfs url?!
+# https://github.com/netbootxyz/netboot.xyz/issues/224
+imgfree
+kernel ${url}/${kernel} ${boot_params} ${config_params} ${debug_params} initrd=${initrd}
+initrd ${url}/${initrd}
+boot || goto kairos
+
+:kairos_exit
+clear menu
+exit 0
+

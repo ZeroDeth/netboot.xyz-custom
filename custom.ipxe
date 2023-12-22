@@ -1,0 +1,22 @@
+#!ipxe
+
+
+goto ${menu} ||
+
+:custom_menu
+menu Custom Installers - Current Arch [ ${arch} ]
+item --gap Installers:
+item kairos ${space} Kairos
+item kairos-debug ${space} Kairos Debug
+item proxmox ${space} Proxmox
+choose menu || goto custom_exit
+echo ${cls}
+goto ${menu} || goto change_menu
+
+:change_menu
+chain ${menu}.ipxe || goto error
+goto custom_menu
+
+:custom_exit
+clear menu
+exit 0
