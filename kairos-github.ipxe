@@ -1,0 +1,80 @@
+#!ipxe
+
+goto ${menu} ||
+clear version
+
+:kairos
+set os kairos
+set os_arch ${arch}
+
+# cloudinit is in assets folder of my netboot installation
+set config http://192.168.1.106:8081/cloudinit/kairos/config.yaml
+
+menu kairos version
+  item v2.4.3 ${space} 2.4.3
+  item v2.4.2 ${space} 2.4.2
+  item v2.4.1 ${space} 2.4.1
+  #isset ${version} ||
+  choose version || goto ${menu}
+
+menu kairos k3s version
+  item v1.28.2 ${space} 1.28.2
+  item v1.27.6 ${space} 1.27.6
+  item v1.26.9 ${space} 1.26.9
+  choose k3s_version || goto ${menu}
+
+menu kairos dist
+  item alpine-3.18-core-amd64-generic ${space} alpine-3.18-core-amd64-generic
+  item alpine-3.18-standard-amd64-generic ${space} alpine-3.18-standard-amd64-generic
+  item debian-bookworm-core-amd64-generic ${space} debian-bookworm-core-amd64-generic
+  item debian-bookworm-standard-amd64-generic ${space} debian-bookworm-standard-amd64-generic
+  item fedora-38-core-amd64-generic ${space} fedora-38-core-amd64-generic
+  item fedora-38-standard-amd64-generic ${space} fedora-38-standard-amd64-generic
+  item opensuse-leap-15.5-core-amd64-generic ${space} opensuse-leap-15.5-core-amd64-generic
+  item opensuse-leap-15.5-standard-amd64-generic ${space} opensuse-leap-15.5-standard-amd64-generic
+  item ubuntu-20.04-core-amd64-generic ${space} ubuntu-20.04-core-amd64-generic
+  item ubuntu-20.04-standard-amd64-generic ${space} buntu-20.04-standard-amd64-generic
+  item ubuntu-22.04-core-amd64-generic ${space} ubuntu-22.04-core-amd64-generic
+  item ubuntu-22.04-standard-amd64-generic ${space} ubuntu-22.04-standard-amd64-generic
+  item ubuntu-23.04-core-amd64-generic ${space} ubuntu-23.04-core-amd64-generic
+  item ubuntu-23.04-standard-amd64-generic ${space} ubuntu-23.04-standard-amd64-generic
+  item rockylinux-9-core-amd64-generic ${space} rockylinux-9-core-amd64-generic
+  item rockylinux-9-standard-amd64-generic ${space} rockylinux-9-standard-amd64-generic
+  choose dist || goto ${menu}
+
+menu kairos install
+  item kairos_k3s ${space} kairos-${dist}-${version}-k3s${k3s_version}+k3s1
+  item kairos ${space} kairos-${dist}-${version}
+  choose --default kairos kairos_install && goto ${kairos_install}_install
+
+:kairos__k3s_install
+set url https://github.com/kairos-io/kairos/releases/download/${version}
+set kernel kairos-${dist}-${version}-k3s${k3s_version}+k3s1-kernel
+set initrd kairos-${dist}-${version}-k3s${k3s_version}+k3s1-initrd
+set rootfs kairos-${dist}-${version}-k3s${k3s_version}+k3s1.squashfs
+
+:kairos_install
+set url https://github.com/kairos-io/kairos/releases/download/${version}
+#set url http://192.168.1.106:8081/kairos-assets
+set kernel kairos-${dist}-${version}-kernel
+set initrd kairos-${dist}-${version}-initrd
+set rootfs kairos-${dist}-${version}.squashfs
+
+
+set boot_params ip=dhcp netboot rd.cos.disable nodepair.enable console=tty1 console=ttyS0 root=live:${url}/${rootfs}
+#net.ifnames=0 net.biosnames=0
+#install.auto=1
+# rd.noverifyssl
+# rd.neednet=1
+set config_params config_url=${config}
+set debug_params #rd.break=pre-mount rd.shell #rd.debug #rd.live.debug=1 rd.net.dhcp.retry=5 rd.net.timeout.dhcp=300 rd.live.debug=1 loglevel=7
+
+# without imgfree netboot.xyz linux tries to boot with truncated rootfs url?!
+imgfree
+kernel ${url}/${kernel} ${boot_params} ${config_params} ${debug_params} initrd=${initrd}
+initrd ${url}/${initrd}
+boot || goto kairos
+
+:kairos_exit
+clear menu
+exit 0
