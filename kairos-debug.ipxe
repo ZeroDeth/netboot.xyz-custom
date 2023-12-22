@@ -27,7 +27,7 @@ menu kairos version
 menu kairos k3s version
   item v1.28.2 ${space} 1.28.2
   item v1.27.6 ${space} 1.27.6
-  item v1.26.9 ${space} 1.27.9
+  item v1.26.9 ${space} 1.26.9
   item v1.25.3 ${space} 1.25.3
   item v1.25.2 ${space} 1.25.2
   item v1.24.2 ${space} 1.24.2
