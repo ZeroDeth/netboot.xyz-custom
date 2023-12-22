@@ -11,6 +11,7 @@ set os_arch ${arch}
 set config http://192.168.1.106/cloudinit/kairos/config.yaml
 
 menu kairos version
+  item v2.4.3 ${space} 2.4.3
   item v1.2.0 ${space} 1.2.0
   item v1.1.7 ${space} 1.1.7
   item v1.1.6 ${space} 1.1.6
@@ -24,6 +25,9 @@ menu kairos version
   choose version || goto ${menu}
 
 menu kairos k3s version
+  item v1.28.2 ${space} 1.28.2
+  item v1.27.6 ${space} 1.27.6
+  item v1.26.9 ${space} 1.27.9
   item v1.25.3 ${space} 1.25.3
   item v1.25.2 ${space} 1.25.2
   item v1.24.2 ${space} 1.24.2
@@ -38,6 +42,10 @@ menu kairos dist
   item ubuntu ${space} ubuntu
   item ubuntu-20-lts ${space} ubuntu-20-lts
   item ubuntu-22-lts ${space} ubuntu-22-lts
+  item ubuntu-22.04-core-amd64-generic ${space} ubuntu-22.04-core-amd64-generic
+  item ubuntu-22.04-standard-amd64-generic ${space} ubuntu-22.04-standard-amd64-generic
+  item ubuntu-23.04-core-amd64-generic ${space} ubuntu-23.04-core-amd64-generic
+  item ubuntu-23.04-standard-amd64-generic ${space} ubuntu-23.04-standard-amd64-generic
   choose dist || goto ${menu}
 
 menu kairos install
@@ -76,4 +84,3 @@ boot || goto kairos
 :kairos_exit
 clear menu
 exit 0
-
