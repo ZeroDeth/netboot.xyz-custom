@@ -7,6 +7,7 @@ goto ${menu} ||
 menu Custom Installers - Current Arch [ ${arch} ]
 item --gap Installers:
 item kairos ${space} Kairos
+item kairos-github ${space} Kairos GitHub
 item kairos-debug ${space} Kairos Debug
 item proxmox ${space} Proxmox
 choose menu || goto custom_exit
