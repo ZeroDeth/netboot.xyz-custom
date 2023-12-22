@@ -8,8 +8,8 @@ set os kairos
 set os_arch ${arch}
 
 # cloudinit is in assets folder of my netboot installation
-set server_config https://raw.githubusercontent.com/ZeroDeth/kairos-enigma/blob/main/deploy/config/server.yaml
-set agent_config https://raw.githubusercontent.com/ZeroDeth/kairos-enigma/blob/main/deploy/config/agent.yaml
+set server_config https://raw.githubusercontent.com/ZeroDeth/kairos-enigma/main/deploy/config/server.yaml
+set agent_config https://raw.githubusercontent.com/ZeroDeth/kairos-enigma/main/deploy/config/agent.yaml
 
 set kairos_version v1.3.0
 set k3s_version v1.25.3
